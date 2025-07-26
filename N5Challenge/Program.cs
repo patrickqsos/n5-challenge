@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using N5Challenge.Domain;
 using N5Challenge.Enrichers;
+using N5Challenge.Repositories;
+using N5Challenge.Repositories.Interfaces;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +18,14 @@ builder.Services.AddSerilog((provider, configuration) =>
         .Enrich.With<ClassNameEnricher>()
         .WriteTo.Console();
 });
+builder.Services.AddDbContext<N5DbContext>(optionsBuilder =>
+{
+    var cs = builder.Configuration.GetConnectionString("DefaultConnection");
+    optionsBuilder.UseSqlServer(cs);
+});
+
+builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+builder.Services.AddScoped<IPermissionTypeRepository, PermissionTypeRepository>();
 
 var app = builder.Build();
 
