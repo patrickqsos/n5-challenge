@@ -14,14 +14,15 @@ public class GetPermissionsQueryHandler(IPermissionRepository permissionReposito
 
     public async Task<IReadOnlyList<PermissionDto>> Handle(GetPermissionsQuery query, CancellationToken ct)
     {
+        _logger.Information("Querying all permissions");
         var rawList = await permissionRepository.GetAllAsync(ct);
         
-        _logger.Information("Found: {permissionCount} permissions. Returning page: {pageNumber} with size: {pageSize}", rawList.Count, query.page, query.pageSize);
+        _logger.Information("Found: {permissionCount} permissions. Returning page: {pageNumber} with size: {pageSize}", rawList.Count, query.Page, query.PageSize);
         
         return rawList
-            .Skip((query.page - 1) * query.pageSize)
-            .Take(query.pageSize)
-            .Select(p => new PermissionDto(p.Id, p.EmployeeName, p.PermissionTypes.Description, p.PermissionDate))
+            .Skip((query.Page - 1) * query.PageSize)
+            .Take(query.PageSize)
+            .Select(p => new PermissionDto(p.Id, p.EmployeeForename, p.EmployeeSurname, p.PermissionType.Description, p.PermissionDate))
             .ToList();
     }
 }

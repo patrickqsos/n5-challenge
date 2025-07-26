@@ -4,4 +4,4 @@ using N5Challenge.Dtos;
 
 namespace N5Challenge.Queries;
 
-public record GetPermissionsQuery(int page, int pageSize) : IRequest<IReadOnlyList<PermissionDto>>;
+public record GetPermissionsQuery(int Page, int PageSize) : IRequest<IReadOnlyList<PermissionDto>>;

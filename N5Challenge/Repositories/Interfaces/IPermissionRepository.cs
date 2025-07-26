@@ -4,6 +4,11 @@ namespace N5Challenge.Repositories.Interfaces;
 
 public interface IPermissionRepository
 {
-    Task<List<Permissions>> GetAllAsync(CancellationToken ct = default);
+    Task<Permission?> GetByIdAsync(int id, CancellationToken ct = default);
+
+    Task<List<Permission>> GetAllAsync(CancellationToken ct = default);
+
+    Task<Permission> CreateAsync(Permission entity, CancellationToken ct = default);
     
+    void Update(Permission entity);
 }
