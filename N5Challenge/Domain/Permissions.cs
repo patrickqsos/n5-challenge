@@ -2,7 +2,7 @@
 
 namespace N5Challenge.Domain;
 
-public class Permission
+public class Permissions
 {
     public int Id { get; set; }
 
@@ -10,10 +10,10 @@ public class Permission
     public string EmployeeName { get; set; } = null!;
 
     /// <summary>
-    /// Foreign‑key towards <see cref="PermissionType"/>.
+    /// Foreign‑key towards <see cref="PermissionTypes"/>.
     /// </summary>
     public int PermissionTypeId { get; set; }
-    public PermissionType PermissionType { get; set; } = null!;
+    public PermissionTypes PermissionTypes { get; set; } = null!;
 
     /// <summary>
     /// When the permission takes / took place (UTC).

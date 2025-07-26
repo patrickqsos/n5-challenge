@@ -6,15 +6,15 @@ public class N5DbContext : DbContext
 {
     public N5DbContext(DbContextOptions<N5DbContext> options) : base(options) { }
 
-    public DbSet<Permission> Permissions => Set<Permission>();
-    public DbSet<PermissionType> PermissionTypes => Set<PermissionType>();
+    public DbSet<Permissions> Permissions => Set<Permissions>();
+    public DbSet<PermissionTypes> PermissionTypes => Set<PermissionTypes>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
         // ----------------------- PermissionType -----------------------
-        builder.Entity<PermissionType>(cfg =>
+        builder.Entity<PermissionTypes>(cfg =>
         {
             cfg.ToTable("PermissionTypes");
             cfg.HasKey(pt => pt.Id);
@@ -25,7 +25,7 @@ public class N5DbContext : DbContext
         });
 
         // ------------------------- Permission -------------------------
-        builder.Entity<Permission>(cfg =>
+        builder.Entity<Permissions>(cfg =>
         {
             cfg.ToTable("Permissions");
             cfg.HasKey(p => p.Id);
@@ -39,7 +39,7 @@ public class N5DbContext : DbContext
                 .HasColumnType("datetime2")
                 .HasDefaultValueSql("SYSUTCDATETIME()");
 
-            cfg.HasOne(p => p.PermissionType)
+            cfg.HasOne(p => p.PermissionTypes)
                 .WithMany()
                 .HasForeignKey(p => p.PermissionTypeId)
                 .OnDelete(DeleteBehavior.Restrict);

@@ -2,7 +2,7 @@
 
 namespace N5Challenge.Domain;
 
-public class PermissionType
+public class PermissionTypes
 {
     public int Id { get; set; }
 
