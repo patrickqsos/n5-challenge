@@ -4,6 +4,8 @@ using N5Challenge.Domain;
 using N5Challenge.Enrichers;
 using N5Challenge.Repositories;
 using N5Challenge.Repositories.Interfaces;
+using N5Challenge.Services;
+using N5Challenge.Services.Interfaces;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,9 +32,13 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IPermissionTypeRepository, PermissionTypeRepository>();
 
+builder.Services.AddSingleton<IKafkaProducerService, KafkaProducerService>();
+
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 var app = builder.Build();
+
+Log.Information("Component has started and it's ready");
 
 app.UseSerilogRequestLogging();
 
