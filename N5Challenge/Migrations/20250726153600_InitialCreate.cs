@@ -30,7 +30,8 @@ namespace N5Challenge.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EmployeeName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    EmployeeForename = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    EmployeeSurname = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     PermissionTypeId = table.Column<int>(type: "int", nullable: false),
                     PermissionDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "SYSUTCDATETIME()")
                 },

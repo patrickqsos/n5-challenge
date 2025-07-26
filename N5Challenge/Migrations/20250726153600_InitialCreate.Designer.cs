@@ -12,7 +12,7 @@ using N5Challenge.Domain;
 namespace N5Challenge.Migrations
 {
     [DbContext(typeof(N5DbContext))]
-    [Migration("20250726015117_InitialCreate")]
+    [Migration("20250726153600_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,7 +33,12 @@ namespace N5Challenge.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("EmployeeName")
+                    b.Property<string>("EmployeeForename")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("EmployeeSurname")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
