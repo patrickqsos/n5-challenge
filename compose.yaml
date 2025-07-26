@@ -1,0 +1,16 @@
+﻿services:
+  n5challenge:
+    image: n5challenge
+    build:
+      context: .
+      dockerfile: N5Challenge/Dockerfile
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=n5ch4ll3ng3!
+    ports:
+      - "1433:1433"
+    restart: unless-stopped

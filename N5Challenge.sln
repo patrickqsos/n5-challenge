@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N5Challenge", "N5Challenge\N5Challenge.csproj", "{6976FD0D-FD04-465F-A07B-1A36203C0FD7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FF1C0FB8-D021-4E0F-9784-C4E1A69ABB88}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6976FD0D-FD04-465F-A07B-1A36203C0FD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6976FD0D-FD04-465F-A07B-1A36203C0FD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6976FD0D-FD04-465F-A07B-1A36203C0FD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6976FD0D-FD04-465F-A07B-1A36203C0FD7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
