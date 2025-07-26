@@ -10,6 +10,6 @@ public class PermissionRepository(N5DbContext ctx) : IPermissionRepository
 
     public async Task<List<Permissions>> GetAllAsync(CancellationToken ct = default)
     {
-        return await _ctx.Permissions.ToListAsync(ct);
+        return await _ctx.Permissions.Include(p => p.PermissionTypes).ToListAsync(ct);
     }
 }
