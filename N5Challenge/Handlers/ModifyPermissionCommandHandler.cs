@@ -2,13 +2,15 @@ using MediatR;
 using N5Challenge.Commands;
 using N5Challenge.Domain;
 using N5Challenge.Dtos;
+using N5Challenge.Enums;
 using N5Challenge.Repositories.Interfaces;
+using N5Challenge.Services.Interfaces;
 using Serilog;
 using ILogger = Serilog.ILogger;
 
 namespace N5Challenge.Handlers;
 
-public class ModifyPermissionCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<ModifyPermissionCommand>
+public class ModifyPermissionCommandHandler(IUnitOfWork unitOfWork, IKafkaProducerService kafkaProducerService) : IRequestHandler<ModifyPermissionCommand>
 {
     private readonly ILogger _logger = Log.ForContext<ModifyPermissionCommandHandler>();
 
@@ -37,5 +39,7 @@ public class ModifyPermissionCommandHandler(IUnitOfWork unitOfWork) : IRequestHa
         
         unitOfWork.PermissionRepository.Update(permission);
         await unitOfWork.SaveChangesAsync(ct);
+        
+        await kafkaProducerService.Send(new KafkaMessageDto(Guid.NewGuid(), KafkaOperationEnum.modify));
     }
 }

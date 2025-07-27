@@ -34,6 +34,8 @@ builder.Services.AddScoped<IPermissionTypeRepository, PermissionTypeRepository>(
 
 builder.Services.AddSingleton<IKafkaProducerService, KafkaProducerService>();
 
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 var app = builder.Build();

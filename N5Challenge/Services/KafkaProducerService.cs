@@ -3,6 +3,7 @@ using Confluent.Kafka;
 using N5Challenge.Dtos;
 using N5Challenge.Services.Interfaces;
 using Serilog;
+using Serilog.Events;
 using ILogger = Serilog.ILogger;
 
 namespace N5Challenge.Services;
@@ -17,9 +18,38 @@ public class KafkaProducerService : IKafkaProducerService
         var configProducer = new ProducerConfig
         {
             BootstrapServers = configuration.GetSection("Kafka").GetValue<string>("BootstrapServer"),
+            MessageTimeoutMs = 2000
         };
 
-        _producer = new ProducerBuilder<Null, string>(configProducer).Build();
+        _producer = new ProducerBuilder<Null, string>(configProducer)
+            .SetLogHandler((_, e) =>
+            {
+                LogEventLevel logLevel;
+                switch (e.Level)
+                {
+                    case SyslogLevel.Emergency:
+                    case SyslogLevel.Critical:
+                        logLevel = LogEventLevel.Fatal;
+                        break;
+                    case SyslogLevel.Error:
+                        logLevel = LogEventLevel.Error;
+                        break;
+                    case SyslogLevel.Alert:
+                    case SyslogLevel.Warning:
+                    case SyslogLevel.Notice:
+                        logLevel = LogEventLevel.Warning;
+                        break;
+                    case SyslogLevel.Info:
+                        logLevel = LogEventLevel.Information;
+                        break;
+                    case SyslogLevel.Debug:
+                        logLevel = LogEventLevel.Debug;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                _logger.Write(logLevel, "{facility} - {message}", e.Facility, e.Message);
+            }).Build();
     }
 
     public async Task<DeliveryResult<Null, string>> Send(KafkaMessageDto kafkaMessage, string topic = "operations" )
