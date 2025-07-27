@@ -38,7 +38,7 @@ public class PermissionsController(IMediator mediator) : ControllerBase
     /// <returns>A task representing the asynchronous operation.
     /// The task result contains an IActionResult with the ID of the newly created permission as its content.</returns>
     [HttpPost("request")]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
     public async Task<IActionResult> RequestPermission([FromBody] RequestPermissionCommand command,
         CancellationToken ct)
     {
