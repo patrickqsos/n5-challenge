@@ -54,6 +54,7 @@ public class KafkaProducerService : IKafkaProducerService
 
     public async Task<DeliveryResult<Null, string>> Send(KafkaMessageDto kafkaMessage, string topic = "operations" )
     {
+        _logger.Information("Logging operation: {operation} ", kafkaMessage.OperationName);
         _logger.Debug("Kafka message: {@kafkaMessage} ", kafkaMessage);
 
         var msg = new Message<Null, string>
