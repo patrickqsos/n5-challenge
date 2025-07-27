@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		compose.yaml = compose.yaml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N5Challenge.Tests", "N5Challenge.Tests\N5Challenge.Tests.csproj", "{A1313DAB-DC45-40B3-AFEF-08B0553DEC3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,5 +19,9 @@ Global
 		{6976FD0D-FD04-465F-A07B-1A36203C0FD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6976FD0D-FD04-465F-A07B-1A36203C0FD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6976FD0D-FD04-465F-A07B-1A36203C0FD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1313DAB-DC45-40B3-AFEF-08B0553DEC3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1313DAB-DC45-40B3-AFEF-08B0553DEC3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1313DAB-DC45-40B3-AFEF-08B0553DEC3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1313DAB-DC45-40B3-AFEF-08B0553DEC3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

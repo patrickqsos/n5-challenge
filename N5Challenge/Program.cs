@@ -49,14 +49,17 @@ builder.Services.AddSerilog((provider, configuration) =>
         .Enrich.FromLogContext()
         .Enrich.WithProperty(SerilogConstants.LogType, SerilogConstants.LogGeneral)
         .Enrich.With<ClassNameEnricher>()
-        .WriteTo.Elasticsearch(new[] { new Uri(elasticsearchConfig.GetValue<string>("host")) }, opts =>
+        .WriteTo.Elasticsearch([new Uri(elasticsearchConfig.GetValue<string>("host") ?? throw new InvalidOperationException())], opts =>
         {
             opts.DataStream = new DataStreamName("logs", "registry", "n5");
             opts.BootstrapMethod = BootstrapMethod.Failure;
             
         }, transport =>
         {
-            transport.Authentication(new BasicAuthentication(elasticsearchConfig.GetValue<string>("user"), elasticsearchConfig.GetValue<string>("password")));
+            transport.Authentication(new BasicAuthentication(
+                elasticsearchConfig.GetValue<string>("user") ?? throw new InvalidOperationException(), 
+                elasticsearchConfig.GetValue<string>("password") ?? throw new InvalidOperationException()
+                ));
         });
 });
 builder.Services.AddDbContext<N5DbContext>(optionsBuilder =>
