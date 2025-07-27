@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using N5Challenge.Constants;
 using N5Challenge.Domain;
 using N5Challenge.Enrichers;
+using N5Challenge.Middlewares;
 using N5Challenge.Repositories;
 using N5Challenge.Repositories.Interfaces;
 using N5Challenge.Services;
@@ -80,6 +81,7 @@ var app = builder.Build();
 
 Log.Information("Component has started and it's ready");
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
@@ -91,3 +93,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
+
+// Public class for integration tests
+public partial class Program { }

@@ -4,6 +4,7 @@ using N5Challenge.Constants;
 using N5Challenge.Domain;
 using N5Challenge.Dtos;
 using N5Challenge.Enums;
+using N5Challenge.Exceptions;
 using N5Challenge.Repositories.Interfaces;
 using N5Challenge.Services.Interfaces;
 using Serilog;
@@ -21,7 +22,7 @@ public class RequestPermissionCommandHandler(IUnitOfWork unitOfWork, IKafkaProdu
 
         var permissionType = await unitOfWork.PermissionTypeRepository.GetByidAsync(command.PermissionTypeId, ct);
         if(permissionType is null)
-            throw new ArgumentException("Permission type id not found");
+            throw new NotFoundException("Permission type id not found");
 
         _logger.Information("Permission type id is valid");
 

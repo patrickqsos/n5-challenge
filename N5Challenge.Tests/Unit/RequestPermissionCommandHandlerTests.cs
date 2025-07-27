@@ -5,20 +5,24 @@ using N5Challenge.Repositories.Interfaces;
 using N5Challenge.Domain;
 using N5Challenge.Dtos;
 using N5Challenge.Enums;
+using N5Challenge.Exceptions;
 using N5Challenge.Services.Interfaces;
+
+namespace N5Challenge.Tests.Unit;
 
 public class RequestPermissionCommandHandlerTests
 {
     [Fact]
     public async Task Handle_ReturnsPermissionDto_WhenPermissionTypeExists()
     {
+        // Arrange
         var mockUnitOfWork = new Mock<IUnitOfWork>();
         var mockPermissionTypeRepo = new Mock<IPermissionTypeRepository>();
         var mockPermissionRepo = new Mock<IPermissionRepository>();
         var mockKafkaService = new Mock<IKafkaProducerService>();
 
         var permissionType = new PermissionType { Id = 1, Description = "Test" };
-        var permission = new Permission { Id = 1, EmployeeForename = "John", EmployeeSurname = "Doe", PermissionTypeId = 1, PermissionType = permissionType, PermissionDate = System.DateTime.Now };
+        var permission = new Permission { Id = 1, EmployeeForename = "Patricio", EmployeeSurname = "Quispe", PermissionTypeId = 1, PermissionType = permissionType, PermissionDate = System.DateTime.Now };
         
         mockPermissionTypeRepo.Setup(r => r.GetByidAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(permissionType);
         mockPermissionRepo.Setup(r => r.CreateAsync(It.IsAny<Permission>(), It.IsAny<CancellationToken>())).ReturnsAsync(permission);
@@ -28,13 +32,15 @@ public class RequestPermissionCommandHandlerTests
         mockKafkaService.Setup(k => k.Send(It.IsAny<KafkaMessageDto>(), It.IsAny<string>())).ReturnsAsync((Confluent.Kafka.DeliveryResult<Confluent.Kafka.Null, string>)null!);
 
         var handler = new RequestPermissionCommandHandler(mockUnitOfWork.Object, mockKafkaService.Object);
-        var command = new RequestPermissionCommand("John", "Doe", 1, permission.PermissionDate);
-
+        var command = new RequestPermissionCommand("Patricio", "Quispe", 1, permission.PermissionDate);
+        
+        // Act
         var result = await handler.Handle(command, CancellationToken.None);
 
+        // Assert
         Assert.NotNull(result);
-        Assert.Equal("John", result.EmployeeForename);
-        Assert.Equal("Doe", result.EmployeeSurname);
+        Assert.Equal("Patricio", result.EmployeeForename);
+        Assert.Equal("Quispe", result.EmployeeSurname);
         Assert.Equal("Test", result.PermissionType);
         mockKafkaService.Verify(k => k.Send(It.Is<KafkaMessageDto>(m => m.OperationName == OperationEnum.request), It.IsAny<string>()), Times.Once);
     }
@@ -42,6 +48,7 @@ public class RequestPermissionCommandHandlerTests
     [Fact]
     public async Task Handle_ThrowsArgumentException_WhenPermissionTypeNotFound()
     {
+        // Arrange
         var mockUnitOfWork = new Mock<IUnitOfWork>();
         var mockPermissionTypeRepo = new Mock<IPermissionTypeRepository>();
         var mockKafkaService = new Mock<IKafkaProducerService>();
@@ -51,8 +58,10 @@ public class RequestPermissionCommandHandlerTests
         mockKafkaService.Setup(k => k.Send(It.IsAny<KafkaMessageDto>(), It.IsAny<string>())).ReturnsAsync((Confluent.Kafka.DeliveryResult<Confluent.Kafka.Null, string>)null!);
         
         var handler = new RequestPermissionCommandHandler(mockUnitOfWork.Object, mockKafkaService.Object);;
-        var command = new RequestPermissionCommand("Jane", "Smith", 99, DateTime.Now);
+        var command = new RequestPermissionCommand("Patricio", "Quispe", 99, DateTime.Now);
 
-        await Assert.ThrowsAsync<ArgumentException>(() => handler.Handle(command, CancellationToken.None));
+        // Act
+        // Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
     }
 } 

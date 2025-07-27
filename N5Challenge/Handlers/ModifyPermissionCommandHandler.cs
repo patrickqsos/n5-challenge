@@ -4,6 +4,7 @@ using N5Challenge.Constants;
 using N5Challenge.Domain;
 using N5Challenge.Dtos;
 using N5Challenge.Enums;
+using N5Challenge.Exceptions;
 using N5Challenge.Repositories.Interfaces;
 using N5Challenge.Services.Interfaces;
 using Serilog;
@@ -21,7 +22,7 @@ public class ModifyPermissionCommandHandler(IUnitOfWork unitOfWork, IKafkaProduc
 
         var permission = await unitOfWork.PermissionRepository.GetByIdAsync(command.Id, ct);
         if(permission is null)
-            throw new ArgumentException("Permission not found");
+            throw new NotFoundException("Permission not found");
 
         _logger.Information("Permission id is valid");
 
@@ -29,7 +30,7 @@ public class ModifyPermissionCommandHandler(IUnitOfWork unitOfWork, IKafkaProduc
 
         var permissionType = await unitOfWork.PermissionTypeRepository.GetByidAsync(command.PermissionTypeId, ct);
         if(permissionType is null)
-            throw new ArgumentException("Permission type id not found");
+            throw new NotFoundException("Permission type id not found");
 
         _logger.Information("Permission type id is valid");
 

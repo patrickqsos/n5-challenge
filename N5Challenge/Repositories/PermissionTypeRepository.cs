@@ -7,6 +7,16 @@ namespace N5Challenge.Repositories;
 public class PermissionTypeRepository(N5DbContext ctx) : IPermissionTypeRepository
 {
     /// <summary>
+    /// Retrieves a list of all permission type entities asynchronously.
+    /// </summary>
+    /// <param name="ct">The cancellation token used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result is a list of all permission type entities.</returns>
+    public async Task<List<PermissionType>> GetAllAsync(CancellationToken ct = default)
+    {
+        return await ctx.PermissionType.ToListAsync(ct);
+    }
+    
+    /// <summary>
     /// Retrieves a permission type entity by its unique identifier asynchronously.
     /// </summary>
     /// <param name="id">The unique identifier of the permission type to be retrieved.</param>
