@@ -1,5 +1,11 @@
 using System.Reflection;
+using Destructurama;
+using Elastic.Ingest.Elasticsearch;
+using Elastic.Ingest.Elasticsearch.DataStreams;
+using Elastic.Serilog.Sinks;
+using Elastic.Transport;
 using Microsoft.EntityFrameworkCore;
+using N5Challenge.Constants;
 using N5Challenge.Domain;
 using N5Challenge.Enrichers;
 using N5Challenge.Repositories;
@@ -7,6 +13,7 @@ using N5Challenge.Repositories.Interfaces;
 using N5Challenge.Services;
 using N5Challenge.Services.Interfaces;
 using Serilog;
+//using Serilog.Sinks.Elasticsearch;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,10 +24,40 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSerilog((provider, configuration) =>
 {
+    var elasticsearchConfig = builder.Configuration.GetSection("Elasticsearch");
+    /*
+    var esConfig = new ElasticsearchSinkOptions(new Uri(elasticsearchConfig.GetValue<string>("host")))
+    {
+        BatchAction = ElasticOpType.Create,
+        
+        ModifyConnectionSettings = connectionConfiguration =>
+        {
+            connectionConfiguration.EnableHttpCompression();
+            connectionConfiguration.BasicAuthentication();
+            return connectionConfiguration;
+        },
+        IndexDecider = (logEvent, _) => logEvent.Properties.TryGetValue(SerilogConstants.LogType, out var logType) ? logType.ToString().ToLower() : "general"
+    };
+    */
+    
+    Log.Information("Configuring serilog sink for elasticsearch with host: {elasticSearchHost}", elasticsearchConfig.GetValue<string>("host"));
+
     configuration.ReadFrom.Configuration(builder.Configuration)
         .ReadFrom.Services(provider)
+        .Destructure.JsonNetTypes()
+        //.Destructure.UsingAttributes()
         .Enrich.FromLogContext()
-        .Enrich.With<ClassNameEnricher>();
+        .Enrich.WithProperty(SerilogConstants.LogType, SerilogConstants.LogGeneral)
+        .Enrich.With<ClassNameEnricher>()
+        .WriteTo.Elasticsearch(new[] { new Uri(elasticsearchConfig.GetValue<string>("host")) }, opts =>
+        {
+            opts.DataStream = new DataStreamName("logs", "registry", "n5");
+            opts.BootstrapMethod = BootstrapMethod.Failure;
+            
+        }, transport =>
+        {
+            transport.Authentication(new BasicAuthentication(elasticsearchConfig.GetValue<string>("user"), elasticsearchConfig.GetValue<string>("password")));
+        });
 });
 builder.Services.AddDbContext<N5DbContext>(optionsBuilder =>
 {
@@ -33,8 +70,6 @@ builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IPermissionTypeRepository, PermissionTypeRepository>();
 
 builder.Services.AddSingleton<IKafkaProducerService, KafkaProducerService>();
-
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 

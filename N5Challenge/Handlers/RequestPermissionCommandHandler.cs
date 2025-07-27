@@ -1,5 +1,6 @@
 using MediatR;
 using N5Challenge.Commands;
+using N5Challenge.Constants;
 using N5Challenge.Domain;
 using N5Challenge.Dtos;
 using N5Challenge.Enums;
@@ -34,8 +35,14 @@ public class RequestPermissionCommandHandler(IUnitOfWork unitOfWork, IKafkaProdu
         var entityCreated = await unitOfWork.PermissionRepository.CreateAsync(entity, ct);
         await unitOfWork.SaveChangesAsync(ct);
         
-        await kafkaProducerService.Send(new KafkaMessageDto(Guid.NewGuid(), KafkaOperationEnum.request));
+        await kafkaProducerService.Send(new KafkaMessageDto(Guid.NewGuid(), OperationEnum.request));
 
+        _logger
+            .ForContext(SerilogConstants.LogType, SerilogConstants.LogRegistry)
+            .ForContext(SerilogConstants.Operation, nameof(OperationEnum.request))
+            .ForContext(SerilogConstants.RegistryData, entity, true)
+            .Information("Logging registry data");
+        
         //todo: use automapper here
         return new PermissionDto(entityCreated.Id, entityCreated.EmployeeForename, entityCreated.EmployeeSurname, entityCreated.PermissionType.Description, entityCreated.PermissionDate) ;
     }

@@ -25,7 +25,7 @@
       - 9092:9092
       - 9093:9093
     volumes:
-      - ./storage/kafka:/tmp/kraft-combined-logs
+      - ./kafka-storage/kafka:/tmp/kraft-combined-logs
     environment:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       KAFKA_NODE_ID: 1
@@ -40,7 +40,74 @@
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
       KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://localhost:9092,INTERNALUI://kafka:9091'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
-    networks:
-      viridian.ltd:
-        aliases:
-          - kafka.viridian.ltd
+
+  kafka-ui:
+    image: ghcr.io/kafbat/kafka-ui:v1.2.0
+    restart: unless-stopped
+    hostname: kafka-ui
+    container_name: kafka-ui
+    ports:
+      - 8080:8080
+    #volumes:
+    #  - ./tls:/opt/viridian/tls:ro
+    environment:
+      AUTH_TYPE: 'LOGIN_FORM'
+      DYNAMIC_CONFIG_ENABLED: 'true'
+      SPRING_SECURITY_USER_NAME: 'kafka'
+      SPRING_SECURITY_USER_PASSWORD: 'kafka'
+      #SERVER_SSL_CERTIFICATE: '/opt/viridian/tls/cert.pem'
+      #SERVER_SSL_CERTIFICATEPRIVATEKEY: '/opt/viridian/tls/key.pem'
+      #SERVER_SERVLET_CONTEXT_PATH: '/kafka'
+      KAFKA_CLUSTERS_0_NAME: 'n5'
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'kafka:9091'
+  
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - node.name=elasticsearch
+      - ELASTIC_PASSWORD=elastic
+      #- cluster.name=n5-cluster
+      #- cluster.initial_master_nodes=localhost
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=false
+      #- xpack.security.http.ssl.key=/usr/share/elasticsearch/config/certs/key.pem
+      #- xpack.security.http.ssl.certificate=/usr/share/elasticsearch/config/certs/cert.pem
+      - xpack.security.transport.ssl.enabled=false
+      #- xpack.security.transport.ssl.verification_mode=certificate
+      #- xpack.security.transport.ssl.certificate=/usr/share/elasticsearch/config/certs/cert.pem
+      #- xpack.security.transport.ssl.key=/usr/share/elasticsearch/config/certs/key.pem
+      #- path.repo=/usr/share/elasticsearch/snapshots
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./elasticsearch-storage:/usr/share/elasticsearch/data
+      #- ./tls:/usr/share/elasticsearch/config/certs
+      #- ./snapshots:/usr/share/elasticsearch/snapshots
+    ports:
+      - 9200:9200
+
+  kibana-init:
+    image: alpine:3.19
+    depends_on:
+      - elasticsearch
+    working_dir: /data
+    volumes:
+      - .:/data
+    entrypoint: sh -c "apk add --no-cache bash curl sed; bash elasticsearch-init.sh"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.17.0
+    container_name: kibana
+    restart: always
+    ports:
+      - 5601:5601
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+    

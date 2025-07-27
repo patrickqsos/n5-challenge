@@ -1,5 +1,6 @@
 using MediatR;
 using N5Challenge.Commands;
+using N5Challenge.Constants;
 using N5Challenge.Domain;
 using N5Challenge.Dtos;
 using N5Challenge.Enums;
@@ -40,6 +41,12 @@ public class ModifyPermissionCommandHandler(IUnitOfWork unitOfWork, IKafkaProduc
         unitOfWork.PermissionRepository.Update(permission);
         await unitOfWork.SaveChangesAsync(ct);
         
-        await kafkaProducerService.Send(new KafkaMessageDto(Guid.NewGuid(), KafkaOperationEnum.modify));
+        await kafkaProducerService.Send(new KafkaMessageDto(Guid.NewGuid(), OperationEnum.modify));
+        
+        _logger
+            .ForContext(SerilogConstants.LogType, SerilogConstants.LogRegistry)
+            .ForContext(SerilogConstants.Operation, nameof(OperationEnum.modify))
+            .ForContext(SerilogConstants.RegistryData, permission, true)
+            .Information("Logging registry data");
     }
 }

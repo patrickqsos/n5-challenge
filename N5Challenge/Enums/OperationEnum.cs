@@ -1,6 +1,6 @@
 namespace N5Challenge.Enums;
 
-public enum KafkaOperationEnum
+public enum OperationEnum
 {
     request,
     modify,

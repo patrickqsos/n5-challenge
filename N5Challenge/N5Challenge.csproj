@@ -9,6 +9,8 @@
 
     <ItemGroup>
         <PackageReference Include="Confluent.Kafka" Version="2.11.0" />
+        <PackageReference Include="Destructurama.JsonNet" Version="4.0.2" />
+        <PackageReference Include="Elastic.Serilog.Sinks" Version="8.18.2" />
         <PackageReference Include="MediatR" Version="13.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.18" />

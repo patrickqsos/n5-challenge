@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using N5Challenge.Constants;
 using N5Challenge.Dtos;
 using N5Challenge.Enums;
 using N5Challenge.Queries;
@@ -21,12 +22,20 @@ public class GetPermissionsQueryHandler(IPermissionRepository permissionReposito
         
         _logger.Information("Found: {permissionCount} permissions. Returning page: {pageNumber} with size: {pageSize}", rawList.Count, query.Page, query.PageSize);
 
-        await kafkaProducerService.Send(new KafkaMessageDto(Guid.NewGuid(), KafkaOperationEnum.get));
+        await kafkaProducerService.Send(new KafkaMessageDto(Guid.NewGuid(), OperationEnum.get));
         
-        return rawList
+        var list = rawList
             .Skip((query.Page - 1) * query.PageSize)
             .Take(query.PageSize)
             .Select(p => new PermissionDto(p.Id, p.EmployeeForename, p.EmployeeSurname, p.PermissionType.Description, p.PermissionDate))
             .ToList();
+
+        _logger
+            .ForContext(SerilogConstants.LogType, SerilogConstants.LogRegistry)
+            .ForContext(SerilogConstants.Operation, nameof(OperationEnum.get))
+            //.ForContext(SerilogConstants.RegistryData, list, true)
+            .Information("Logging registry data");
+        
+        return list;
     }
 }
