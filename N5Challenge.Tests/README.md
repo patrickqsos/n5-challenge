@@ -1,35 +1,34 @@
 # Tests - N5Challenge
 
-## Estructura de Tests
+## Test Structure
 
 ### Integration/TestBase.cs
-Clase base que configura el entorno de testing:
-- Configura WebApplicationFactory para testing de la API
-- Proporciona métodos para seedear la base de datos
+Base class that sets up the testing environment:
+- Configures WebApplicationFactory for API testing
+- Provides methods to seed the database
 
 ### Integration/PermissionsControllerIntegrationTests.cs
-Tests de integración para el controlador de permisos:
-- Prueba todos los endpoints HTTP (GET, POST, PUT)
-- Verifica respuestas HTTP correctas
-- Prueba casos de error y validación
-- Incluye un test end-to-end completo
+Integration tests for the permissions controller:
+- Tests all HTTP endpoints (GET, POST, PUT)
+- Verifies correct HTTP responses
+- Tests error cases
+- Includes a complete end-to-end test
 
 ### Unit/GetPermissionsQueryHandlerTests.cs
-Tests unitarios para el handler del query GetPermissions
+Unit tests for the GetPermissions query handler
 
 ### Unit/ModifyPermissionCommandHandlerTests.cs
-Tests unitarios para el handler del command ModifyPermission
+Unit tests for the ModifyPermission command handler
 
 ### Unit/RequestPermissionCommandHandlerTests.cs
-Tests unitarios para el handler del command RequestPermission
+Unit tests for the RequestPermission command handler
 
-## Ejecución
+## Execution
 
 ```bash
-# Tests del controlador
-dotnet test 
+dotnet test
 ```
 
-### Cobertura
-- Tests para todos los endpoints de la API
-- Tests para todos los handlers de MediatR
+### Coverage
+- Tests for all API endpoints
+- Tests for all MediatR handlers

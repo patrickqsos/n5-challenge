@@ -79,16 +79,22 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Get
 
 var app = builder.Build();
 
-Log.Information("Component has started and it's ready");
+// Apply migrations on startup
+using (var scope = app.Services.CreateScope())
+{
+    Log.Information("Applying DB migrations");
+
+    var dbContext = scope.ServiceProvider.GetRequiredService<N5DbContext>();
+    dbContext.Database.Migrate();
+}
+
+Log.Information("Component has started with configured env: {environment}", builder.Environment.EnvironmentName);
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseSerilogRequestLogging();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.MapControllers();

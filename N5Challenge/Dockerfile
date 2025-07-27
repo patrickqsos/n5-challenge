@@ -11,11 +11,11 @@ COPY ["N5Challenge/N5Challenge.csproj", "N5Challenge/"]
 RUN dotnet restore "N5Challenge/N5Challenge.csproj"
 COPY . .
 WORKDIR "/src/N5Challenge"
-RUN dotnet build "./N5Challenge.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./N5Challenge.csproj" -c $BUILD_CONFIGURATION -o /app/build 
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./N5Challenge.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./N5Challenge.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false 
 
 FROM base AS final
 WORKDIR /app
