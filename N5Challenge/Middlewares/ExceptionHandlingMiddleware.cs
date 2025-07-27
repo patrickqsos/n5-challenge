@@ -7,7 +7,10 @@ using ILogger = Serilog.ILogger;
 
 namespace N5Challenge.Middlewares;
 
- public class ExceptionHandlingMiddleware
+/// <summary>
+/// Middleware for handling exceptions in the HTTP request pipeline.
+/// </summary>
+public class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger _logger = Log.ForContext<ExceptionHandlingMiddleware>();
@@ -36,16 +39,6 @@ namespace N5Challenge.Middlewares;
 
         switch (ex)
         {
-            /*
-            case ValidationException ve:
-                statusCode = HttpStatusCode.BadRequest;
-                problem = new ValidationProblemDetails(ve.Errors)
-                {
-                    Title = ve.Message,
-                    Status = (int)statusCode,
-                };
-                break;
-*/
             case NotFoundException nfe:
                 statusCode = HttpStatusCode.NotFound;
                 problem = new ProblemDetails
