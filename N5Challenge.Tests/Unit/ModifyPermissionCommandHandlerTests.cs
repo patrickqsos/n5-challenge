@@ -21,7 +21,7 @@ public class ModifyPermissionCommandHandlerTests
         var mockPermissionTypeRepo = new Mock<IPermissionTypeRepository>();
         var mockKafkaService = new Mock<IKafkaProducerService>();
         var permissionType = new PermissionType { Id = 1, Description = "Test" };
-        var permission = new Permission { Id = 1, EmployeeForename = "Patricio", EmployeeSurname = "Quispe", PermissionTypeId = 1, PermissionType = permissionType, PermissionDate = System.DateTime.Now };
+        var permission = new Permission { Id = 1, EmployeeForename = "Patricio", EmployeeSurname = "Quispe", PermissionType = 1, PermissionTypeNavigation = permissionType, PermissionDate = System.DateTime.Now };
         
         mockPermissionRepo.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(permission);
         mockPermissionTypeRepo.Setup(r => r.GetByidAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(permissionType);

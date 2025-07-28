@@ -26,9 +26,9 @@ public class ModifyPermissionCommandHandler(IUnitOfWork unitOfWork, IKafkaProduc
 
         _logger.Information("Permission id is valid");
 
-        _logger.Information("Validating permission type id: {permissionTypeId}", command.PermissionTypeId);
+        _logger.Information("Validating permission type id: {permissionTypeId}", command.PermissionType);
 
-        var permissionType = await unitOfWork.PermissionTypeRepository.GetByidAsync(command.PermissionTypeId, ct);
+        var permissionType = await unitOfWork.PermissionTypeRepository.GetByidAsync(command.PermissionType, ct);
         if(permissionType is null)
             throw new NotFoundException("Permission type id not found");
 
@@ -36,7 +36,7 @@ public class ModifyPermissionCommandHandler(IUnitOfWork unitOfWork, IKafkaProduc
 
         permission.EmployeeForename = command.EmployeeForename;
         permission.EmployeeSurname = command.EmployeeSurname;
-        permission.PermissionTypeId = command.PermissionTypeId;
+        permission.PermissionType = command.PermissionType;
         permission.PermissionDate = command.PermissionDate;
         
         unitOfWork.PermissionRepository.Update(permission);

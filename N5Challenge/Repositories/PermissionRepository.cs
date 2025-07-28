@@ -18,7 +18,7 @@ public class PermissionRepository(N5DbContext ctx) : IPermissionRepository
     /// <returns>A task that represents the asynchronous operation. The task result contains the permission with the specified identifier, or null if it does not exist.</returns>
     public async Task<Permission?> GetByIdAsync(int id, CancellationToken ct = default)
     {
-        return await ctx.Permission.Include(p => p.PermissionType).FirstOrDefaultAsync(p => p.Id == id, ct);
+        return await ctx.Permission.Include(p => p.PermissionTypeNavigation).FirstOrDefaultAsync(p => p.Id == id, ct);
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public class PermissionRepository(N5DbContext ctx) : IPermissionRepository
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of all permissions.</returns>
     public async Task<List<Permission>> GetAllAsync(CancellationToken ct = default)
     {
-        return await ctx.Permission.Include(p => p.PermissionType).ToListAsync(ct);
+        return await ctx.Permission.Include(p => p.PermissionTypeNavigation).ToListAsync(ct);
     }
 
     /// <summary>

@@ -18,9 +18,9 @@ public class RequestPermissionCommandHandler(IUnitOfWork unitOfWork, IKafkaProdu
 
     public async Task<PermissionDto> Handle(RequestPermissionCommand command, CancellationToken ct)
     {
-        _logger.Information("Validating permission type id: {permissionTypeId}", command.PermissionTypeId);
+        _logger.Information("Validating permission type id: {permissionTypeId}", command.PermissionType);
 
-        var permissionType = await unitOfWork.PermissionTypeRepository.GetByidAsync(command.PermissionTypeId, ct);
+        var permissionType = await unitOfWork.PermissionTypeRepository.GetByidAsync(command.PermissionType, ct);
         if(permissionType is null)
             throw new NotFoundException("Permission type id not found");
 
@@ -30,7 +30,7 @@ public class RequestPermissionCommandHandler(IUnitOfWork unitOfWork, IKafkaProdu
         {
             EmployeeForename = command.EmployeeForename,
             EmployeeSurname = command.EmployeeSurname,
-            PermissionTypeId = command.PermissionTypeId,
+            PermissionType = command.PermissionType,
             PermissionDate = command.PermissionDate
         };
         var entityCreated = await unitOfWork.PermissionRepository.CreateAsync(entity, ct);
@@ -45,6 +45,6 @@ public class RequestPermissionCommandHandler(IUnitOfWork unitOfWork, IKafkaProdu
             .Information("Logging registry data");
         
         //todo: use automapper here
-        return new PermissionDto(entityCreated.Id, entityCreated.EmployeeForename, entityCreated.EmployeeSurname, entityCreated.PermissionType.Description, entityCreated.PermissionDate) ;
+        return new PermissionDto(entityCreated.Id, entityCreated.EmployeeForename, entityCreated.EmployeeSurname, entityCreated.PermissionTypeNavigation.Description, entityCreated.PermissionDate) ;
     }
 }

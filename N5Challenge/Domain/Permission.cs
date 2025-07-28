@@ -22,10 +22,14 @@ public class Permission
     public string EmployeeSurname { get; set; } = null!;
 
     /// <summary>
-    /// Foreign‑key towards <see cref="PermissionType"/>.
+    /// Foreign‑key towards <see cref="PermissionTypeNavigation"/>.
     /// </summary>
-    public int PermissionTypeId { get; set; }
-    public PermissionType PermissionType { get; set; } = null!;
+    public int PermissionType { get; set; }
+
+    /// <summary>
+    /// Represents the navigation property to the associated permission type.
+    /// </summary>
+    public PermissionType PermissionTypeNavigation { get; set; } = null!;
 
     /// <summary>
     /// When the permission takes / took place (UTC).

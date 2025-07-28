@@ -55,14 +55,14 @@ public abstract class TestBase : IAsyncLifetime
             {
                 EmployeeForename = "Patricio",
                 EmployeeSurname = "Quispe",
-                PermissionTypeId = vacationType.Id,
+                PermissionType = vacationType.Id,
                 PermissionDate = DateTime.Now.AddDays(-5)
             },
             new Permission
             {
                 EmployeeForename = "Nassia",
                 EmployeeSurname = "Salvador",
-                PermissionTypeId = sickLeaveType.Id,
+                PermissionType = sickLeaveType.Id,
                 PermissionDate = DateTime.Now.AddDays(-3)
             }
         };
