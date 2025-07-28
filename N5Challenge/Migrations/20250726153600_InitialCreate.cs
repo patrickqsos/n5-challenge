@@ -32,7 +32,7 @@ namespace N5Challenge.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeForename = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     EmployeeSurname = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    PermissionTypeId = table.Column<int>(type: "int", nullable: false),
+                    PermissionType = table.Column<int>(type: "int", nullable: false),
                     PermissionDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "SYSUTCDATETIME()")
                 },
                 constraints: table =>
@@ -40,7 +40,7 @@ namespace N5Challenge.Migrations
                     table.PrimaryKey("PK_Permissions", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Permissions_PermissionTypes_PermissionTypeId",
-                        column: x => x.PermissionTypeId,
+                        column: x => x.PermissionType,
                         principalTable: "PermissionTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -49,7 +49,7 @@ namespace N5Challenge.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Permissions_PermissionTypeId_PermissionDate",
                 table: "Permissions",
-                columns: new[] { "PermissionTypeId", "PermissionDate" });
+                columns: new[] { "PermissionType", "PermissionDate" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PermissionTypes_Description",

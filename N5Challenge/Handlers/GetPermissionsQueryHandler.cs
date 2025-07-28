@@ -27,7 +27,7 @@ public class GetPermissionsQueryHandler(IPermissionRepository permissionReposito
         var list = rawList
             .Skip((query.Page - 1) * query.PageSize)
             .Take(query.PageSize)
-            .Select(p => new PermissionDto(p.Id, p.EmployeeForename, p.EmployeeSurname, p.PermissionType.Description, p.PermissionDate))
+            .Select(p => new PermissionDto(p.Id, p.EmployeeForename, p.EmployeeSurname, p.PermissionTypeNavigation.Description, p.PermissionDate))
             .ToList();
 
         _logger

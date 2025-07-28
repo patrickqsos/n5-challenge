@@ -45,12 +45,12 @@ namespace N5Challenge.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("SYSUTCDATETIME()");
 
-                    b.Property<int>("PermissionTypeId")
+                    b.Property<int>("PermissionType")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PermissionTypeId", "PermissionDate");
+                    b.HasIndex("PermissionType", "PermissionDate");
 
                     b.ToTable("Permissions", (string)null);
                 });
@@ -78,13 +78,13 @@ namespace N5Challenge.Migrations
 
             modelBuilder.Entity("N5Challenge.Domain.Permission", b =>
                 {
-                    b.HasOne("N5Challenge.Domain.PermissionType", "PermissionType")
+                    b.HasOne("N5Challenge.Domain.PermissionType", "PermissionTypeNavigation")
                         .WithMany()
-                        .HasForeignKey("PermissionTypeId")
+                        .HasForeignKey("PermissionType")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("PermissionType");
+                    b.Navigation("PermissionTypeNavigation");
                 });
 #pragma warning restore 612, 618
         }

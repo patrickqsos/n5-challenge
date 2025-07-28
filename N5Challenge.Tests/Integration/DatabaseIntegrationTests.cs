@@ -71,7 +71,7 @@ public class DatabaseIntegrationTests : TestBase
         {
             EmployeeForename = "Paolo",
             EmployeeSurname = "Quiroz",
-            PermissionTypeId = vacationType.Id,
+            PermissionType = vacationType.Id,
             PermissionDate = DateTime.Now
         };
 
@@ -84,7 +84,7 @@ public class DatabaseIntegrationTests : TestBase
         retrievedPermission.Should().NotBeNull();
         retrievedPermission!.EmployeeForename.Should().Be("Paolo");
         retrievedPermission.EmployeeSurname.Should().Be("Quiroz");
-        retrievedPermission.PermissionTypeId.Should().Be(vacationType.Id);
+        retrievedPermission.PermissionType.Should().Be(vacationType.Id);
     }
 
     //[Fact]
@@ -99,7 +99,7 @@ public class DatabaseIntegrationTests : TestBase
         // Act
         permission!.EmployeeForename = "Patricio Updated";
         permission.EmployeeSurname = "Quispe Updated";
-        permission.PermissionTypeId = sickLeaveType.Id;
+        permission.PermissionType = sickLeaveType.Id;
         permission.PermissionDate = DateTime.Now.AddDays(1);
 
         _permissionRepository.Update(permission);
@@ -110,7 +110,7 @@ public class DatabaseIntegrationTests : TestBase
         updatedPermission.Should().NotBeNull();
         updatedPermission!.EmployeeForename.Should().Be("Patricio Updated");
         updatedPermission.EmployeeSurname.Should().Be("Quispe Updated");
-        updatedPermission.PermissionTypeId.Should().Be(sickLeaveType.Id);
+        updatedPermission.PermissionType.Should().Be(sickLeaveType.Id);
     }
     
     //[Fact]
@@ -127,7 +127,7 @@ public class DatabaseIntegrationTests : TestBase
         result.Should().NotBeNull();
         result!.EmployeeForename.Should().Be("Patricio");
         result.EmployeeSurname.Should().Be("Quispe");
-        result.PermissionTypeId.Should().Be(permission.PermissionTypeId);
+        result.PermissionType.Should().Be(permission.PermissionType);
     }
 
     //[Fact]
@@ -167,12 +167,12 @@ public class DatabaseIntegrationTests : TestBase
         await SeedDatabaseAsync();
 
         // Act
-        var permissions = await _context.Permission.Include(p => p.PermissionType).ToListAsync();
+        var permissions = await _context.Permission.Include(p => p.PermissionTypeNavigation).ToListAsync();
 
         // Assert
         permissions.Should().NotBeEmpty();
-        permissions.Should().OnlyContain(p => p.PermissionType != null);
-        permissions.Should().Contain(p => p.PermissionType!.Description == "Vacation");
-        permissions.Should().Contain(p => p.PermissionType!.Description == "Sick Leave");
+        permissions.Should().OnlyContain(p => p.PermissionTypeNavigation != null);
+        permissions.Should().Contain(p => p.PermissionTypeNavigation!.Description == "Vacation");
+        permissions.Should().Contain(p => p.PermissionTypeNavigation!.Description == "Sick Leave");
     }
 } 

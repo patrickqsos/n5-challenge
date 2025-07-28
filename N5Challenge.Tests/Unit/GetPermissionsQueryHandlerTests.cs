@@ -20,8 +20,8 @@ public class GetPermissionsQueryHandlerTests
         var permissionType = new PermissionType { Id = 1, Description = "Test" };
         var permissions = new List<Permission>
         {
-            new Permission { Id = 1, EmployeeForename = "Patricio", EmployeeSurname = "Quispe", PermissionTypeId = 1, PermissionType = permissionType, PermissionDate = DateTime.Now },
-            new Permission { Id = 2, EmployeeForename = "Nassia", EmployeeSurname = "Salvador", PermissionTypeId = 1, PermissionType = permissionType, PermissionDate = DateTime.Now }
+            new Permission { Id = 1, EmployeeForename = "Patricio", EmployeeSurname = "Quispe", PermissionType = 1, PermissionTypeNavigation = permissionType, PermissionDate = DateTime.Now },
+            new Permission { Id = 2, EmployeeForename = "Nassia", EmployeeSurname = "Salvador", PermissionType = 1, PermissionTypeNavigation = permissionType, PermissionDate = DateTime.Now }
         };
         
         mockPermissionRepo.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(permissions);

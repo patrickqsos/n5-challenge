@@ -43,12 +43,12 @@ public class N5DbContext : DbContext
                 .HasColumnType("datetime2")
                 .HasDefaultValueSql("SYSUTCDATETIME()");
 
-            cfg.HasOne(p => p.PermissionType)
+            cfg.HasOne(p => p.PermissionTypeNavigation)
                 .WithMany()
-                .HasForeignKey(p => p.PermissionTypeId)
+                .HasForeignKey(p => p.PermissionType)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            cfg.HasIndex(p => new { p.PermissionTypeId, p.PermissionDate });
+            cfg.HasIndex(p => new { PermissionTypeId = p.PermissionType, p.PermissionDate });
         });
     }
 }
