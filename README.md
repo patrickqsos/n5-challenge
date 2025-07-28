@@ -1,5 +1,11 @@
 # N5 Challenge
 
+## Requisites
+
+- Docker
+- .NET Core 8
+- Ports available: 1433, 9091, 9092, 9093, 8090, 9200, 5601, 8080
+
 ## Start docker containers
 
 1. Execute:
@@ -56,7 +62,7 @@ Endpoints available:
 - POST /permissions/request
 - PUT /permissions/modify/:id
 
-There are two ways to start:
+**There are two ways to start:**
 
 1. Using a docker container:
 
@@ -66,6 +72,8 @@ docker compose up -d n5-api
 The following docker container will be created:
 
 - n5-api
+
+> Docker image will be built using the following [dockerfile](N5Challenge/Dockerfile)
 
 > This way uses environment `Staging` declared at: `N5Challenge/appsettings.Staging.json`
 
