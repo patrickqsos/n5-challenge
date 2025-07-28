@@ -87,6 +87,8 @@ The following docker container will be created:
 
 Both ways use port 8080: http://localhost:8080/swagger/index.html
 
+> Request and modify operations require data in table `PermissionTypes`. So it's important to connect to database and create some data. Running the tests are a good option too as this process will seed the database and create 3 permission types.
+
 ## Tests
 
 1. Execute:
